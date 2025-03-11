@@ -1,9 +1,10 @@
-import primsa from "../db/db.config.js";
+import { Prisma } from "@prisma/client";
+import prisma from "../db/db.config.js";
 
 export const createUser = async (req, res) => {
   const { name, email, password } = req.body;
 
-  const findUser = await primsa.user.findUnique({
+  const findUser = await prisma.user.findUnique({
     where: {
       email: email,
     },
@@ -16,7 +17,7 @@ export const createUser = async (req, res) => {
     });
   }
 
-  const newUser = await primsa.user.create({
+  const newUser = await prisma.user.create({
     data: {
       name: name,
       email: email,
@@ -51,5 +52,22 @@ export const updateUser = async (req, res) => {
   return res.json({
     status: 200,
     message: "user Updated",
+  });
+};
+
+export const fetchUser = async (req, res) => {
+  const users = await prisma.user.findMany({});
+  return res.json({
+    status: 200,
+    data: users,
+  });
+};
+
+export const showUser = async (req, res) => {
+  const userId = req.params.id;
+  const getUser = prisma.user.findUnique({
+    where: {
+      id: Number(userId),
+    },
   });
 };
