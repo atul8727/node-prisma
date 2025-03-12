@@ -1,33 +1,20 @@
 import { Prisma } from "@prisma/client";
 import prisma from "../db/db.config.js";
 
-export const createUser = async (req, res) => {
-  const { name, email, password } = req.body;
+export const createPost = async (req, res) => {
+  const { user_id, title, description } = req.body;
 
-  const findUser = await prisma.user.findUnique({
-    where: {
-      email: email,
-    },
-  });
-
-  if (findUser) {
-    return res.json({
-      status: 400,
-      message: "User already exist",
-    });
-  }
-
-  const newUser = await prisma.user.create({
+  const newPost = await prisma.post.create({
     data: {
-      name: name,
-      email: email,
-      password: password,
+      user_id: Number(user_id),
+      title,
+      description,
     },
   });
 
   return res.json({
     status: 200,
-    data: newUser,
+    data: newPost,
     msg: "created successfully",
   });
 };
